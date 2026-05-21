@@ -1,0 +1,22 @@
+{
+  "name": "Sesto Fitness",
+  "short_name": "SestoFit",
+  "description": "Tvoja osobna fitness aplikacija",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/ikona-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/ikona-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

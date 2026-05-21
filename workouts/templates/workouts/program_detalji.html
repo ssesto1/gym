@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ program.naziv }} |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-7xl mx-auto">
+    
+    <div class="mb-10 lg:mb-16">
+        <a href="{% url 'workouts:plan_treninga' %}" class="w-12 h-12 rounded-full bg-brand-card border border-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors mb-8 backdrop-blur-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </a>
+        
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+                {% if program.kreator %}
+                    <span class="text-brand-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block">Tvoj osobni program</span>
+                {% else %}
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block">Sistemski program</span>
+                {% endif %}
+                <h1 class="text-4xl lg:text-6xl font-bold text-white uppercase tracking-tight mb-4 leading-none">{{ program.naziv }}</h1>
+            </div>
+            
+            {% if program.kreator == user and not aktivni_dan_id %}
+            <div class="flex gap-3 shrink-0 relative z-20">
+                <a href="{% url 'workouts:dodaj_dan' program.id %}" class="bg-brand-card border border-brand-accent/30 text-brand-accent px-5 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-brand-accent/10 transition-all flex items-center">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Novi Dan
+                </a>
+                <a href="{% url 'workouts:obrisi_program' program.id %}" onclick="return confirm('Sigurno želiš obrisati program?')" class="bg-[#121212] border border-red-500/30 text-red-500 px-4 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-red-500/10 transition-all flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="space-y-8 lg:space-y-12">
+        
+        {% if aktivni_dan_id %}
+            <div class="bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-4 rounded-2xl flex items-center justify-center font-black text-sm tracking-widest uppercase mb-4 animate-pulse relative z-20">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Trening u tijeku
+            </div>
+        {% endif %}
+
+        {% for dan in dani %}
+            {% if not aktivni_dan_id or dan.id == aktivni_dan_id %}
+            
+            <div class="bg-brand-card/40 backdrop-blur-md rounded-[2.5rem] p-6 lg:p-10 border border-gray-800/50 shadow-xl relative overflow-hidden group {% if aktivni_dan_id == dan.id %}ring-2 ring-red-500/50{% endif %}">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-gray-800/20 rounded-full blur-[50px] pointer-events-none {% if not aktivni_dan_id %}group-hover:bg-brand-accent/5{% endif %} transition-all duration-500"></div>
+
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 relative z-20 gap-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-2xl bg-[#121212] border border-gray-800/50 flex items-center justify-center text-xl mr-4 shrink-0 shadow-inner">⚡</div>
+                        <h2 class="text-2xl font-bold text-white uppercase tracking-tight">{{ dan.naziv }}</h2>
+                    </div>
+                    
+                    <div class="flex gap-3 w-full lg:w-auto">
+                        {% if program.kreator == user and not aktivni_dan_id %}
+                        <a href="{% url 'workouts:dodaj_vjezbu' dan.id %}" class="flex-1 lg:flex-none justify-center items-center flex bg-transparent border border-brand-accent/30 text-brand-accent px-5 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-brand-accent hover:text-[#0a0a0a] transition-all">
+                            Dodaj vježbu
+                        </a>
+                        {% endif %}
+
+                        {% if aktivni_dan_id == dan.id %}
+                            <a href="{% url 'workouts:zavrsi_dan' dan.id %}" class="flex-1 lg:flex-none justify-center items-center flex bg-red-600 text-white px-8 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:opacity-80 hover:-translate-y-0.5 transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] relative z-30">Završi Trening</a>
+                        {% else %}
+                            <a href="{% url 'workouts:zapocni_trening' dan.id %}" class="flex-1 lg:flex-none justify-center items-center flex bg-brand-accent text-[#0a0a0a] px-8 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-[0_0_15px_rgba(0,242,254,0.2)]">Započni Trening</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="space-y-3 relative z-20">
+                    {% for vjezba in dan.vjezbe.all %}
+                    <a href="{% url 'workouts:vjezba_detalji' vjezba.id %}" class="flex items-center justify-between bg-[#121212]/80 p-4 lg:p-5 rounded-2xl border border-gray-800/40 hover:border-brand-accent/50 transition-colors group/vjezba">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-xs font-black text-gray-600 w-6 text-center">{{ vjezba.redni_broj }}</span>
+                            <h3 class="text-white font-semibold text-sm lg:text-base group-hover/vjezba:text-brand-accent transition-colors">{{ vjezba.naziv }}</h3>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-600 group-hover/vjezba:text-brand-accent group-hover/vjezba:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                    {% empty %}
+                    <div class="text-center py-8 border border-dashed border-gray-800/60 rounded-2xl bg-[#121212]/30">
+                        <p class="text-gray-500 text-sm italic">U ovom danu još nema vježbi.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

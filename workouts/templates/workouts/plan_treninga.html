@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Planovi Treninga |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-10 lg:mb-16">
+        <div>
+            <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.15em] mb-1">Odaberi ili napravi</p>
+            <h1 class="text-4xl lg:text-5xl font-bold text-white uppercase tracking-tight">Plan <span class="font-light text-brand-accent">Treninga</span></h1>
+        </div>
+        
+        <a href="{% url 'workouts:kreiraj_program' %}" class="bg-brand-accent text-[#0a0a0a] px-4 py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl font-bold uppercase text-[10px] lg:text-xs tracking-widest hover:-translate-y-1 transition-all shadow-[0_0_15px_rgba(0,242,254,0.2)] flex items-center shrink-0">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5 mr-1.5 lg:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Kreiraj Svoj
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {% for program in programi %}
+        <a href="{% url 'workouts:program_detalji' program.id %}" class="block group relative">
+            <div class="bg-brand-card/40 backdrop-blur-md rounded-[2rem] p-6 lg:p-8 border border-gray-800/50 shadow-xl overflow-hidden transition-all duration-300 group-hover:border-brand-accent/50 group-hover:shadow-[0_0_30px_rgba(0,242,254,0.1)] h-full flex flex-col">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-accent/10 transition-all"></div>
+
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-[#121212] border border-gray-800/50 flex items-center justify-center text-brand-accent group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    {% if program.kreator %}
+                        <span class="text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent border border-brand-accent/20">Moj Program</span>
+                    {% else %}
+                        <span class="text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-gray-800/50 text-gray-400 border border-gray-700">Sistemski</span>
+                    {% endif %}
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-tight relative z-10">{{ program.naziv }}</h2>
+                <p class="text-gray-400 text-sm font-normal leading-relaxed line-clamp-3 mb-6 relative z-10 flex-grow">{{ program.opis }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

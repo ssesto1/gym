@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Dodaj Vježbu |  Fitness{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<style>
+    /* Tom Select dark neon theme overrides */
+    .ts-wrapper .ts-control { 
+        background: rgba(18,18,18,0.6) !important; 
+        border: 1px solid rgba(255,255,255,0.08) !important; 
+        border-radius: 1rem !important; 
+        color: white !important; 
+        padding: 1rem 1.25rem !important; 
+        font-weight: 500 !important;
+    }
+    .ts-wrapper.focus .ts-control { 
+        border-color: #00f2fe !important; 
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1) !important; 
+    }
+    .ts-dropdown { 
+        background: #121212 !important; 
+        border: 1px solid rgba(255,255,255,0.08) !important; 
+        border-radius: 1rem !important; 
+        color: white !important; 
+    }
+    .ts-dropdown .option { 
+        padding: 10px 15px !important; 
+        color: #e5e7eb !important; 
+    }
+    .ts-dropdown .active { 
+        background-color: rgba(0, 242, 254, 0.1) !important; 
+        color: #00f2fe !important; 
+    }
+    .ts-wrapper .ts-control input { color: white !important; }
+    .ts-wrapper .ts-control .item { color: white !important; }
+</style>
+
+<div class="px-5 pt-12 pb-32 max-w-xl mx-auto">
+    <a href="{% url 'workouts:program_detalji' dan.program.id %}" class="w-10 h-10 rounded-full bg-brand-card border border-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors mb-6 backdrop-blur-md">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+    </a>
+
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-white uppercase tracking-tighter">Odaberi <span class="font-light text-[#00f2fe]">Vježbu</span></h1>
+        <p class="text-gray-500 text-xs uppercase tracking-widest mt-2">Dodaj u: {{ dan.naziv }}</p>
+    </div>
+
+    <div class="bg-brand-card/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-gray-800/30 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#00f2fe]/5 rounded-full blur-[60px] pointer-events-none"></div>
+
+        <form method="POST" class="space-y-5 relative z-10">
+            {% csrf_token %}
+            <div>
+                <label class="block text-[10px] text-gray-500 uppercase tracking-[0.15em] mb-1.5 ml-1 font-semibold">Baza vježbi</label>
+                <select id="vjezba-select" name="katalog_id" required placeholder="Upiši naziv za pretragu...">
+                    <option value="" disabled selected>-- Pritisni za odabir vježbe --</option>
+                    {% for item in katalog %}
+                        <option value="{{ item.id }}">{{ item.naziv }} ({{ item.kategorija }})</option>
+                    {% empty %}
+                        <option value="" disabled>Trener još nije dodao vježbe u katalog.</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-[#00f2fe] text-[#0a0a0a] font-bold text-base py-4 rounded-xl tracking-wide shadow-[0_0_15px_rgba(0,242,254,0.3)] hover:bg-[#00d4df] hover:-translate-y-0.5 transition-all">Dodaj u plan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        new TomSelect("#vjezba-select", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            maxOptions: 100
+        });
+    });
+</script>
+{% endblock %}

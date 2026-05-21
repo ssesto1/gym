@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Početna |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-7xl mx-auto space-y-8">
+    
+    <div>
+        <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.15em] mb-1">Dobrodošao natrag</p>
+        <h1 class="text-4xl font-bold text-white uppercase tracking-tight">{{ user.username }}</h1>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        
+        <div class="bg-brand-card/40 backdrop-blur-md rounded-[2rem] p-6 lg:p-8 border border-gray-800/50 shadow-xl relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-accent/5 rounded-full blur-[40px] pointer-events-none"></div>
+            
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent border border-brand-accent/20">Zadnji Trening</span>
+                    {% if zadnji_trening %}
+                        <span class="text-xs text-gray-500 font-medium">{{ zadnji_trening.formatirano_trajanje }}</span>
+                    {% endif %}
+                </div>
+
+                {% if zadnji_trening %}
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-tight mb-2">{{ zadnji_trening.dan_treninga.naziv }}</h2>
+                    <p class="text-gray-400 text-sm mb-4">{{ zadnji_trening.dan_u_tjednu }}, {{ zadnji_trening.kraj|date:"d.m.Y." }}</p>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider space-y-1">
+                        <p>Volumen: <span class="text-white font-bold">{{ zadnji_trening.ukupni_volumen }} kg</span></p>
+                        <p>Serije: <span class="text-white font-bold">{{ zadnji_trening.serije.count }}</span></p>
+                    </div>
+                {% else %}
+                    <h2 class="text-xl font-bold text-gray-400 uppercase tracking-tight mb-2">Nema zabilježenih treninga</h2>
+                    <p class="text-gray-500 text-sm">Započni svoj prvi trening u kartici Planovi.</p>
+                {% endif %}
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-gray-800/40 flex justify-between items-center relative z-10">
+                <a href="{% url 'workouts:plan_treninga' %}" class="inline-flex items-center text-xs font-bold uppercase tracking-widest text-brand-accent hover:underline">
+                    Novi trening 
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+                
+                <a href="{% url 'workouts:povijest_treninga' %}" class="inline-flex items-center text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors bg-[#121212] px-3 py-2 rounded-lg border border-gray-800/50">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Sva Povijest
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-brand-card/40 backdrop-blur-md rounded-[2rem] p-6 lg:p-8 border border-gray-800/50 shadow-xl relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Prehrana i Kalorije</span>
+                </div>
+
+                {% if plan %}
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-tight mb-2">Tvoj Cilj: {{ user.get_cilj_display }}</h2>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="bg-[#121212]/60 p-3 rounded-xl border border-gray-800/40 text-center">
+                            <span class="block text-[10px] text-gray-500 uppercase tracking-wider">Kalorije</span>
+                            <span class="text-white font-black text-xl">{{ plan.kalorije }} <span class="text-xs font-normal text-gray-500">kcal</span></span>
+                        </div>
+                        <div class="bg-[#121212]/60 p-3 rounded-xl border border-gray-800/40 text-center">
+                            <span class="block text-[10px] text-gray-500 uppercase tracking-wider">Proteini</span>
+                            <span class="text-brand-accent font-black text-xl">{{ plan.proteini }} <span class="text-xs font-normal text-gray-500">g</span></span>
+                        </div>
+                    </div>
+                {% else %}
+                    <h2 class="text-xl font-bold text-gray-400 uppercase tracking-tight mb-2">Plan prehrane nije postavljen</h2>
+                    <p class="text-gray-500 text-sm">Ispunite fitness podatke na svom profilu kako bi sustav izračunao vaše makrose.</p>
+                {% endif %}
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-gray-800/40">
+                <a href="{% url 'users:profil' %}" class="inline-flex items-center text-xs font-bold uppercase tracking-widest text-blue-400 hover:underline">
+                    Pogledaj profil 
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="bg-brand-card/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-gray-800/50 shadow-xl mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-white font-bold uppercase tracking-widest text-sm">Aktivnost</h3>
+                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Zadnjih 90 dana</p>
+            </div>
+            <div class="w-10 h-10 bg-[#00f2fe]/10 rounded-full flex items-center justify-center text-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.15)]">
+                🔥
+            </div>
+        </div>
+
+        <div class="flex overflow-x-auto pb-4 scrollbar-hide" style="scrollbar-width: none;">
+            <div id="heatmap-grid" class="flex flex-col gap-1.5" style="min-width: max-content;"></div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 mt-2 text-[9px] text-gray-500 uppercase tracking-widest">
+            <span>Odmaranje</span>
+            <div class="w-3 h-3 rounded-[3px] bg-[#121212]/60 border border-gray-800/60"></div>
+            <div class="w-3 h-3 rounded-[3px] bg-[#00f2fe] shadow-[0_0_8px_rgba(0,242,254,0.5)]"></div>
+            <span>Trening</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Podaci iz Django backend-a
+            const treninzi = {{ datumi_json|safe|default:"[]" }};
+            const kontejner = document.getElementById('heatmap-grid');
+            const brojDana = 90;
+
+            // Priprema 7 redova (Ponedjeljak = 0, ..., Nedjelja = 6)
+            let daniTjedna = [[], [], [], [], [], [], []]; 
+
+            // Idemo unatrag (od prije 90 dana do danas)
+            for (let i = brojDana; i >= 0; i--) {
+                let datum = new Date();
+                datum.setDate(datum.getDate() - i);
+                
+                // Formatiranje datuma u YYYY-MM-DD zbog vremenskih zona
+                let datumString = datum.getFullYear() + "-" + 
+                                  String(datum.getMonth() + 1).padStart(2, '0') + "-" + 
+                                  String(datum.getDate()).padStart(2, '0');
+                
+                let danUTjednu = (datum.getDay() + 6) % 7; 
+                let datumPrikaz = datum.toLocaleDateString('hr-HR');
+
+                // Provjera je li na taj datum odrađen trening
+                let stil = treninzi.includes(datumString) 
+                    ? 'bg-[#00f2fe] shadow-[0_0_8px_rgba(0,242,254,0.5)] border-transparent' 
+                    : 'bg-[#121212]/60 border-gray-800/60';
+
+                // Dodavanje kockice u odgovarajući red (dan u tjednu)
+                daniTjedna[danUTjednu].push(
+                    `<div class="w-3.5 h-3.5 md:w-4 md:h-4 rounded-[4px] border ${stil} transition-transform duration-200 hover:scale-125 cursor-pointer relative group">
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-[#121212] text-white text-[9px] uppercase tracking-widest px-2 py-1 rounded-md border border-gray-800 whitespace-nowrap z-50">
+                            ${datumPrikaz}
+                        </div>
+                    </div>`
+                );
+            }
+
+            // Spajanje svih redova u HTML kontejner
+            let tjedniHtml = '';
+            for(let r = 0; r < 7; r++) {
+                tjedniHtml += `<div class="flex gap-1.5">${daniTjedna[r].join('')}</div>`;
+            }
+            kontejner.innerHTML = tjedniHtml;
+            
+            // Automatski scrollaj na današnji dan (krajnje desno)
+            kontejner.parentElement.scrollLeft = kontejner.parentElement.scrollWidth;
+        });
+    </script>
+</div>
+
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

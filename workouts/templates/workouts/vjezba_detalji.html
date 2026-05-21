@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vjezba.naziv }} |  Fitness{% endblock %}
+
+{% block content %}
+<style>
+    .premium-inline-input {
+        width: 100%; background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 1rem; padding: 0.85rem 1rem; color: white; font-weight: 600; font-size: 1.25rem; text-align: center; outline: none; transition: all 0.3s ease;
+    }
+    .premium-inline-input:focus { border-color: #00f2fe; background-color: rgba(0, 242, 254, 0.02); box-shadow: 0 0 15px rgba(0, 242, 254, 0.1); }
+</style>
+
+<div class="px-5 pt-8 pb-40 max-w-7xl mx-auto relative">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <div class="lg:col-span-5 space-y-6">
+            <div class="relative w-full aspect-video rounded-[2rem] overflow-hidden border border-gray-800/40 shadow-2xl bg-[#0a0a0a]">
+                <a href="{% url 'workouts:program_detalji' vjezba.dan.program.id %}" class="absolute top-4 left-4 z-20 w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-gray-700/50 hover:bg-black/80 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </a>
+                
+                {% if vjezba.video %}
+                    <video class="w-full h-full object-cover pointer-events-none" autoplay loop muted playsinline>
+                        <source src="{{ vjezba.video.url }}" type="video/mp4">
+                    </video>
+                {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-800 border border-dashed border-gray-800/50 rounded-[2rem]">
+                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <span class="font-bold uppercase text-xs tracking-wider">Video uskoro</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="px-1">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[#00f2fe] text-[10px] font-semibold uppercase tracking-[0.2em]">{{ vjezba.redni_broj }}. Vježba</span>
+                    
+                    <a href="{% url 'workouts:vjezba_analitika' vjezba.id %}" class="flex items-center text-gray-500 hover:text-[#00f2fe] transition-colors">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                        <span class="text-[9px] font-bold uppercase tracking-widest">Analitika</span>
+                    </a>
+                </div>
+                <h1 class="text-3xl font-bold text-white uppercase tracking-tight">{{ vjezba.naziv }}</h1>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-6">
+            {% if aktivna_sesija %}
+            <div class="flex items-center justify-between bg-brand-card/40 backdrop-blur-md p-5 rounded-2xl border border-gray-800/40 shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f2fe] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00f2fe]"></span>
+                    </span>
+                    <span id="workout-timer" class="text-[#00f2fe] font-mono font-bold text-xl tracking-tight">00:00:00</span>
+                </div>
+                <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Vrijeme treninga</p>
+            </div>
+
+            <div class="bg-brand-card/40 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-800/40 shadow-xl">
+                <h4 class="text-[10px] font-bold uppercase tracking-widest text-center text-gray-400 mb-4">Dodaj Seriju {{ iduca_serija }}</h4>
+                
+                <form method="POST" class="flex flex-wrap items-end gap-3 lg:gap-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="broj_serije" value="{{ iduca_serija }}">
+                    
+                    <div class="flex-1 min-w-[70px] text-center">
+                        <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5 font-medium">KG</label>
+                        <input type="number" step="0.5" name="tezina" required class="premium-inline-input" placeholder="0">
+                    </div>
+                    
+                    <div class="flex-1 min-w-[70px] text-center">
+                        <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5 font-medium">Reps</label>
+                        <input type="number" name="ponavljanja" required class="premium-inline-input" placeholder="0">
+                    </div>
+
+                    <div class="flex-1 min-w-[70px] text-center">
+                        <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5 font-medium">RPE</label>
+                        <input type="number" step="0.5" min="1" max="10" name="rpe" class="premium-inline-input" placeholder="10">
+                    </div>
+                    
+                    <button type="submit" class="w-full lg:w-auto bg-[#00f2fe] text-[#0a0a0a] font-bold py-3.5 px-6 rounded-2xl uppercase text-sm tracking-wide shadow-md hover:bg-[#00d4df] hover:scale-105 transition-all shrink-0 mt-2 lg:mt-0">
+                        Spremi
+                    </button>
+                </form>
+
+                <div class="mt-4 pt-4 border-t border-gray-800/40 flex items-start space-x-2 text-[10px] text-gray-400 leading-relaxed">
+                    <span class="text-[#00f2fe] shrink-0 text-xs mt-0.5">💡</span>
+                    <p>
+                        <strong class="text-gray-300 uppercase tracking-wider">Što je RPE?</strong> Ljestvica napora od 1 do 10.<br>
+                        <span class="text-white font-medium">10</span> = Maksimum, 
+                        <span class="text-white font-medium">9</span> = Još 1 ponavljanje u rezervi, 
+                        <span class="text-white font-medium">8</span> = Još 2 ponavljanja.<br>
+                        <span class="text-gray-500 italic mt-1 block">*Serije ispod RPE 8 se smatraju zagrijavanjem.</span>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="space-y-3">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-widest ml-1">Odrađene serije</h3>
+                {% for serija in odradene_serije %}
+                    <div class="flex justify-between items-center bg-brand-card/40 p-4 rounded-xl border {% if serija.je_pr %}border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.05)]{% else %}border-gray-800/40{% endif %}">
+                        <div class="flex items-center space-x-4">
+                            <span class="w-8 h-8 rounded-lg {% if serija.je_pr %}bg-yellow-500/10 text-yellow-500 border-yellow-500/20{% else %}bg-[#121212] text-[#00f2fe] border-gray-800/60{% endif %} flex items-center justify-center font-bold text-sm border">{{ serija.broj_serije }}</span>
+                            <div>
+                                <p class="text-white font-semibold text-base">{{ serija.tezina }} <span class="text-xs text-gray-500 font-normal">KG</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 text-right">
+                            {% if serija.rpe %}
+                                <span class="text-[10px] text-gray-500 font-bold uppercase mr-2">RPE {{ serija.rpe }}</span>
+                            {% endif %}
+                            {% if serija.je_pr %}
+                                <span class="px-2 py-0.5 bg-yellow-500/10 text-yellow-500 text-[9px] font-bold rounded-full border border-yellow-500/20">🏆 PR</span>
+                            {% endif %}
+                            <p class="text-white font-semibold text-base">{{ serija.ponavljanja }} <span class="text-xs text-gray-500 font-normal uppercase">Reps</span></p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="py-12 text-center border border-dashed border-gray-800/60 rounded-2xl bg-brand-card/20">
+                        <p class="text-gray-600 text-sm font-normal italic">Nema upisanih serija.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pt-2">
+                <a href="{% url 'workouts:program_detalji' vjezba.dan.program.id %}" class="flex justify-center items-center w-full bg-transparent text-gray-500 font-semibold py-3.5 rounded-xl border border-gray-800/60 hover:border-[#00f2fe]/50 hover:text-white transition-all text-sm uppercase tracking-wider">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Završio sam s vježbom
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="rest-timer-overlay" class="fixed bottom-0 left-0 w-full bg-[#121212]/90 backdrop-blur-xl border-t border-[#00f2fe]/50 z-50 transform translate-y-full transition-transform duration-500 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        <div class="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center text-[#00f2fe] animate-pulse">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Vrijeme za odmor</p>
+                    <p id="countdown-text" class="text-2xl font-mono font-black text-white">01:30</p>
+                </div>
+            </div>
+            <button onclick="closeRestTimer()" class="text-gray-500 hover:text-white bg-gray-800/50 rounded-lg px-4 py-2 text-xs uppercase font-bold tracking-widest transition-colors">Zatvori</button>
+        </div>
+        <div class="w-full h-1 bg-gray-800">
+            <div id="rest-progress" class="h-full bg-[#00f2fe] w-full transition-all duration-1000 ease-linear"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    {% if aktivna_sesija %}
+    const startTimeStr = "{{ aktivna_sesija.pocetak|date:'c' }}";
+    const startTime = new Date(startTimeStr).getTime();
+    
+    function updateWorkoutTimer() {
+        const now = new Date().getTime();
+        const diff = now - startTime;
+        if (diff < 0) return; 
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById("workout-timer").innerText = 
+            (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    }
+    setInterval(updateWorkoutTimer, 1000);
+    updateWorkoutTimer();
+    {% endif %}
+
+    let restInterval;
+    function closeRestTimer() {
+        clearInterval(restInterval);
+        document.getElementById('rest-timer-overlay').classList.add('translate-y-full');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('rest')) {
+            let timeLeft = parseInt(urlParams.get('rest'));
+            const totalTime = timeLeft;
+            const overlay = document.getElementById('rest-timer-overlay');
+            const countdownText = document.getElementById('countdown-text');
+            const progressBar = document.getElementById('rest-progress');
+
+            setTimeout(() => { overlay.classList.remove('translate-y-full'); }, 500);
+
+            restInterval = setInterval(function() {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                countdownText.innerText = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+                let percentage = (timeLeft / totalTime) * 100;
+                progressBar.style.width = percentage + "%";
+
+                if (timeLeft <= 0) {
+                    clearInterval(restInterval);
+                    countdownText.innerText = "KRENI!";
+                    progressBar.style.width = "0%";
+                    setTimeout(closeRestTimer, 3000);
+                }
+            }, 1000);
+        }
+    });
+</script>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

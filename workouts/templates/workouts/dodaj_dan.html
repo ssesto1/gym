@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Dodaj Dan |  Fitness{% endblock %}
+
+{% block content %}
+<style>
+    .premium-input {
+        width: 100%; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem; padding: 1rem 1.25rem; color: #e5e7eb; font-weight: 500; outline: none; transition: all 0.3s ease;
+    }
+    .premium-input:focus { border-color: #00f2fe; background-color: rgba(0, 242, 254, 0.03); box-shadow: 0 0 15px rgba(0, 242, 254, 0.1); }
+</style>
+
+<div class="px-5 pt-12 pb-32 max-w-xl mx-auto">
+    <a href="{% url 'workouts:program_detalji' program.id %}" class="w-10 h-10 rounded-full bg-brand-card border border-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors mb-6 backdrop-blur-md">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+    </a>
+
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-white uppercase tracking-tighter">Novi <span class="font-light text-brand-accent">Dan</span></h1>
+        <p class="text-gray-500 text-xs uppercase tracking-widest mt-2">Za program: {{ program.naziv }}</p>
+    </div>
+
+    <div class="bg-brand-card/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-gray-800/30 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 rounded-full blur-[50px] pointer-events-none"></div>
+
+        <form method="POST" class="space-y-5 relative z-10">
+            {% csrf_token %}
+            <div>
+                <label class="block text-[10px] text-gray-500 uppercase tracking-[0.15em] mb-1.5 ml-1 font-semibold">Naziv Dana</label>
+                <input type="text" name="naziv" required class="premium-input" placeholder="Npr. Dan 1: Gornji dio">
+            </div>
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-brand-accent text-[#0a0a0a] font-bold text-base py-4 rounded-xl tracking-wide shadow-md hover:-translate-y-0.5 transition-all">Dodaj Dan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

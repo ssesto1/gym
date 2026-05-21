@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="hr">
+  <head>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SestoFit">
+    <link rel="apple-touch-icon" href="{% static 'ikona-192x192.png' %}">
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>{% block title %}Fitness App{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                dark: "#0a0a0a", // Duboka OLED crna pozadina
+                card: "#1c1c1e", // Tamno siva za kartice (Glassmorphism osnova)
+                accent: "#00f2fe", // Neonski plava za naglaske
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-brand-dark text-white antialiased pb-20">
+    <main class="min-h-screen">{% block content %} {% endblock %}</main>
+   <script>
+    // POPRAVLJENO: Sada skripta gađa isključivo Django poruke, a NE sve crveno na ekranu!
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            // Pretpostavka je da se tvoje flash poruke nalaze u nekom list tagu ili kontejneru.
+            // Gađamo samo prave alert boxove
+            let messages = document.querySelectorAll('.messages li, .alert, div[role="alert"]');
+            messages.forEach(function(msg) {
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            });
+        }, 2500);
+    });
+</script>
+  </body>
+</html>

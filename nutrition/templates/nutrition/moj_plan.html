@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Moj Plan |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-7xl mx-auto space-y-8">
+    
+    <div class="flex flex-col lg:flex-row justify-between lg:items-end mb-6 gap-4">
+        <div>
+            <p class="text-[#00f2fe] text-xs font-semibold uppercase tracking-[0.15em] mb-1">Nutricionizam</p>
+            <h1 class="text-4xl lg:text-5xl font-bold text-white uppercase tracking-tight">Tvoja <span class="font-light text-[#00f2fe]">Prehrana</span></h1>
+        </div>
+        
+        {% if plan %}
+        <div class="flex flex-col gap-2">
+            <a href="{% url 'nutrition:generiraj_plan' %}" class="bg-[#00f2fe] text-[#0a0a0a] font-black px-6 py-3.5 rounded-xl uppercase text-xs tracking-widest shadow-[0_0_15px_rgba(0,242,254,0.3)] hover:-translate-y-0.5 transition-all text-center">
+                🔄 Novi jelovnik
+            </a>
+            
+            <button onclick="toggleMacrosForm()" class="text-[10px] text-gray-400 font-bold uppercase tracking-widest hover:text-white text-right">
+                ⚙️ Uredi svoje makrose
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if plan %}
+    <div id="macros-form" class="hidden bg-brand-card/40 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-800/40 shadow-xl mb-6">
+        <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#00f2fe] mb-4">Postavi svoje ciljeve</h4>
+        <form method="POST" class="flex flex-wrap items-end gap-3 lg:gap-4">
+            {% csrf_token %}
+            <div class="flex-1 min-w-[70px]">
+                <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Kalorije</label>
+                <input type="number" name="kalorije" value="{{ plan.ciljne_kalorije }}" required class="w-full bg-[#121212]/60 border border-gray-800/60 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe]">
+            </div>
+            <div class="flex-1 min-w-[70px]">
+                <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Proteini</label>
+                <input type="number" name="proteini" value="{{ plan.ciljni_proteini }}" required class="w-full bg-[#121212]/60 border border-gray-800/60 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe]">
+            </div>
+            <div class="flex-1 min-w-[70px]">
+                <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Ugljikohidrati</label>
+                <input type="number" name="ugljikohidrati" value="{{ plan.ciljni_ugljikohidrati }}" required class="w-full bg-[#121212]/60 border border-gray-800/60 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe]">
+            </div>
+            <div class="flex-1 min-w-[70px]">
+                <label class="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Masti</label>
+                <input type="number" name="masti" value="{{ plan.ciljne_masti }}" required class="w-full bg-[#121212]/60 border border-gray-800/60 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe]">
+            </div>
+            <button type="submit" class="w-full lg:w-auto bg-[#121212] text-white font-bold py-3.5 px-6 rounded-xl uppercase text-xs tracking-widest border border-gray-800 hover:border-[#00f2fe] transition-colors shrink-0">
+                Spremi
+            </button>
+        </form>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-brand-card/40 backdrop-blur-md p-5 rounded-[2rem] border border-[#00f2fe]/30 text-center relative overflow-hidden">
+            <div class="absolute -top-4 -right-4 w-16 h-16 bg-[#00f2fe]/10 rounded-full blur-xl"></div>
+            <span class="block text-[10px] text-gray-500 uppercase tracking-widest mb-1 relative z-10">Kalorije</span>
+            <span class="text-white font-black text-3xl relative z-10">{{ plan.ciljne_kalorije }}<span class="text-xs font-normal text-gray-500 ml-1">kcal</span></span>
+        </div>
+        <div class="bg-brand-card/40 backdrop-blur-md p-5 rounded-[2rem] border border-gray-800/50 text-center">
+            <span class="block text-[10px] text-gray-500 uppercase tracking-widest mb-1">Proteini</span>
+            <span class="text-[#00f2fe] font-black text-2xl">{{ plan.ciljni_proteini }}<span class="text-xs font-normal text-gray-500 ml-1">g</span></span>
+        </div>
+        <div class="bg-brand-card/40 backdrop-blur-md p-5 rounded-[2rem] border border-gray-800/50 text-center">
+            <span class="block text-[10px] text-gray-500 uppercase tracking-widest mb-1">Ugljikohidrati</span>
+            <span class="text-yellow-500 font-black text-2xl">{{ plan.ciljni_ugljikohidrati }}<span class="text-xs font-normal text-gray-500 ml-1">g</span></span>
+        </div>
+        <div class="bg-brand-card/40 backdrop-blur-md p-5 rounded-[2rem] border border-gray-800/50 text-center">
+            <span class="block text-[10px] text-gray-500 uppercase tracking-widest mb-1">Masti</span>
+            <span class="text-red-400 font-black text-2xl">{{ plan.ciljne_masti }}<span class="text-xs font-normal text-gray-500 ml-1">g</span></span>
+        </div>
+    </div>
+
+    <div class="relative mt-12">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-6 ml-2">Preporučeni obroci za danas</h3>
+
+        {% if not is_pro_user %}
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center pt-10">
+            <div class="w-16 h-16 bg-[#00f2fe]/20 rounded-full flex items-center justify-center text-[#00f2fe] mb-4 border border-[#00f2fe]/30 shadow-[0_0_20px_rgba(0,242,254,0.3)]">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white uppercase tracking-tight mb-2">Pametni Jelovnik</h2>
+            <p class="text-gray-400 text-sm text-center max-w-sm mb-6">Automatski generator recepata, gramaža i obroka usklađen s tvojim makrosima dostupan je samo PRO članovima.</p>
+            <a href="#" class="bg-[#00f2fe] text-[#0a0a0a] font-black px-8 py-4 rounded-2xl uppercase text-xs tracking-widest shadow-xl hover:bg-[#00d4df] transition-colors">Nadogradi na PRO</a>
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 {% if not is_pro_user %}blur-md opacity-20 pointer-events-none select-none{% endif %}">
+            {% for obrok in plan.obroci.all %}
+            <div class="bg-brand-card/30 backdrop-blur-md rounded-3xl p-6 border border-gray-800/40 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-[#00f2fe]/10 text-[#00f2fe]">{{ obrok.kategorija }}</span>
+                    <span class="text-white font-bold">{{ obrok.kalorije }} <span class="text-[10px] text-gray-500 font-normal">kcal</span></span>
+                </div>
+                
+                <h4 class="text-xl font-bold text-white mb-4">{{ obrok.naziv }}</h4>
+                
+                <div class="flex gap-4 mb-6 border-b border-gray-800/50 pb-4">
+                    <div class="text-center">
+                        <span class="block text-[9px] text-gray-500 uppercase mb-1">P</span>
+                        <span class="text-[#00f2fe] font-semibold text-sm">{{ obrok.proteini }}g</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-[9px] text-gray-500 uppercase mb-1">UH</span>
+                        <span class="text-yellow-500 font-semibold text-sm">{{ obrok.ugljikohidrati }}g</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-[9px] text-gray-500 uppercase mb-1">M</span>
+                        <span class="text-red-400 font-semibold text-sm">{{ obrok.masti }}g</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto space-y-2">
+                    <h5 class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">Sastojci:</h5>
+                    <ul class="space-y-2">
+                        {% for stavka in obrok.stavke.all %}
+                        <li class="flex justify-between items-center text-sm">
+                            <span class="text-gray-300">{{ stavka.namirnica.naziv }}</span>
+                            <span class="text-[#00f2fe] font-bold">{{ stavka.gramaza }}<span class="text-[10px] font-normal text-gray-500">g</span></span>
+                        </li>
+                        {% empty %}
+                        <li class="text-xs text-gray-500 italic">Nema unesenih sastojaka.</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    {% if obrok.recept %}
+                    <div class="mt-4 pt-4 border-t border-gray-800/50">
+                        <p class="text-xs text-gray-400 leading-relaxed">{{ obrok.recept|linebreaksbr }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <div class="col-span-1 md:col-span-2 py-12 text-center border border-dashed border-gray-800/60 rounded-[2.5rem] bg-brand-card/20">
+                    <p class="text-gray-500 text-sm mb-4">Trenutno nemaš dodijeljenih obroka.</p>
+                    <a href="{% url 'nutrition:generiraj_plan' %}" class="text-[#00f2fe] text-xs font-bold uppercase tracking-widest hover:underline">Generiraj jelovnik</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+    <div class="text-center py-20 bg-brand-card/20 border border-dashed border-gray-800/60 rounded-[2.5rem]">
+        <div class="w-16 h-16 bg-[#121212] border border-gray-800 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">⚖️</div>
+        <h2 class="text-2xl font-bold text-gray-400 uppercase tracking-tight mb-2">Nedostaju podaci</h2>
+        <p class="text-gray-500 text-sm max-w-sm mx-auto mb-6">Da bismo izračunali tvoje kalorije i složili jelovnik, moramo znati tvoju trenutnu težinu i cilj.</p>
+        <a href="{% url 'users:profil' %}" class="bg-[#00f2fe] text-[#0a0a0a] font-black text-xs px-6 py-3.5 rounded-xl uppercase tracking-wider shadow-md hover:bg-[#00d4df] transition-colors">Ažuriraj Profil</a>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    function toggleMacrosForm() {
+        const form = document.getElementById('macros-form');
+        form.classList.toggle('hidden');
+    }
+</script>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

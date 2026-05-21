@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Povijest Treninga |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-4xl mx-auto space-y-6">
+    
+    <div class="mb-8">
+        <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.15em] mb-1">Tvoj napredak kroz vrijeme</p>
+        <h1 class="text-4xl font-bold text-white uppercase tracking-tight">Povijest <span class="font-light text-brand-accent">Treninga</span></h1>
+    </div>
+
+    <div class="space-y-6">
+        {% for sesija in sesije %}
+        <div class="bg-brand-card/40 backdrop-blur-md rounded-[2rem] p-5 lg:p-6 border border-gray-800/50 shadow-xl relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/5 rounded-full blur-[40px] pointer-events-none"></div>
+
+            <div class="flex justify-between items-start border-b border-gray-800/40 pb-4 mb-4 relative z-10">
+                <div>
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider block">{{ sesija.dan_treninga.program.naziv }}</span>
+                    <h2 class="text-xl font-bold text-white uppercase tracking-tight mt-0.5">{{ sesija.dan_treninga.naziv }}</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-brand-accent font-semibold block">{{ sesija.dan_u_tjednu }}</span>
+                    <span class="text-xs text-gray-500 font-medium block mt-0.5">{{ sesija.kraj|date:"d.m.Y." }}</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 bg-[#121212]/40 p-4 rounded-2xl border border-gray-800/30 relative z-10 text-center">
+                <div>
+                    <span class="block text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Volumen</span>
+                    <span class="text-white font-black text-sm lg:text-base">{{ sesija.ukupni_volumen }} <span class="text-[10px] font-normal text-gray-500">KG</span></span>
+                </div>
+                <div>
+                    <span class="block text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Trajanje</span>
+                    <span class="text-white font-black text-sm lg:text-base">{{ sesija.formatirano_trajanje }}</span>
+                </div>
+                <div>
+                    <span class="block text-[9px] text-gray-500 uppercase tracking-wider mb-0.5">Serije</span>
+                    <span class="text-white font-black text-sm lg:text-base">{{ sesija.serije.count }}</span>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-2 relative z-10">
+                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3 ml-1">Pregled izvedbe:</h3>
+                <div class="space-y-3">
+                    {% for serija in sesija.serije.all %}
+                        <div class="flex justify-between items-center bg-[#121212]/20 px-3 py-2.5 rounded-xl border border-gray-800/20 text-xs">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-5 h-5 bg-[#121212] border border-gray-800 rounded flex items-center justify-center font-bold text-[10px] text-gray-400">{{ serija.broj_serije }}</span>
+                                <span class="text-gray-200 font-medium">{{ serija.vjezba.naziv }}</span>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3 text-right">
+                                {% if serija.rpe %}
+                                    <span class="text-[9px] font-bold text-gray-600 uppercase">RPE {{ serija.rpe }}</span>
+                                {% endif %}
+                                {% if serija.je_pr %}
+                                    <span class="text-[10px] text-yellow-500">🏆</span>
+                                {% endif %}
+                                <span class="text-white font-semibold">{{ serija.tezina }}kg <span class="text-gray-600 font-normal">x</span> {{ serija.ponavljanja }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="text-center py-16 bg-brand-card/20 border border-dashed border-gray-800/60 rounded-[2.5rem]">
+            <div class="w-16 w-16 h-16 bg-[#121212] border border-gray-800 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📭</div>
+            <h2 class="text-xl font-bold text-gray-400 uppercase tracking-tight mb-1">Povijest je prazna</h2>
+            <p class="text-gray-500 text-sm max-w-xs mx-auto">Ovdje će se pojaviti tvoji završeni treninzi nakon što ih uspješno spremiš.</p>
+            <div class="pt-6">
+                <a href="{% url 'workouts:plan_treninga' %}" class="bg-brand-accent text-[#0a0a0a] font-bold text-xs px-6 py-3 rounded-xl uppercase tracking-wider shadow-md">Započni prvi trening</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Soba Trofeja |  Fitness{% endblock %}
+
+{% block content %}
+<div class="px-5 pt-8 pb-32 max-w-4xl mx-auto space-y-6">
+    
+    <div class="mb-8">
+        <p class="text-yellow-500 text-xs font-semibold uppercase tracking-[0.15em] mb-1">Tvoji osobni rekordi</p>
+        <h1 class="text-4xl font-bold text-white uppercase tracking-tight">Soba <span class="font-light text-yellow-500">Trofeja</span></h1>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for pr in trofeji %}
+        <div class="bg-brand-card/40 backdrop-blur-md rounded-[2rem] p-5 border border-yellow-500/20 shadow-xl relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-yellow-500/5 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="flex justify-between items-center relative z-10">
+                <div class="space-y-1">
+                    <span class="text-gray-500 text-[9px] font-bold uppercase tracking-wider block">Apsolutni PR</span>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-tight group-hover:text-yellow-500 transition-colors">{{ pr.vjezba.naziv }}</h3>
+                    <p class="text-gray-500 text-[10px]">{{ pr.sesija.kraj|date:"d.m.Y." }}</p>
+                </div>
+                
+                <div class="text-right bg-[#121212]/60 px-4 py-3 rounded-2xl border border-gray-800/60">
+                    <span class="block text-white font-black text-xl leading-none">{{ pr.tezina }} <span class="text-xs font-normal text-gray-500">KG</span></span>
+                    <span class="text-[10px] text-yellow-500 font-bold uppercase tracking-widest block mt-1">x {{ pr.ponavljanja }} pon</span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-1 sm:col-span-2 text-center py-16 bg-brand-card/20 border border-dashed border-gray-800/60 rounded-[2.5rem]">
+            <div class="w-16 h-16 bg-[#121212] border border-gray-800 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">🏆</div>
+            <h2 class="text-xl font-bold text-gray-400 uppercase tracking-tight mb-1">Zid je prazan</h2>
+            <p class="text-gray-500 text-sm max-w-xs mx-auto">Odradi trening, guraj do otkaza i tvoji maksimalni liftovi će se pojaviti ovdje.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'includes/bottom_nav.html' %}
+{% endblock %}
