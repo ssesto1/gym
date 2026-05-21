@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SestoFit">
     <link rel="apple-touch-icon" href="{% static 'ikona-192x192.png' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -35,7 +36,7 @@
       };
     </script>
   </head>
-  <body class="bg-brand-dark text-white antialiased pb-20">
+  <body class="bg-[#121212] text-white font-sans antialiased" hx-boost="true">
     <main class="min-h-screen">{% block content %} {% endblock %}</main>
    <script>
     // POPRAVLJENO: Sada skripta gađa isključivo Django poruke, a NE sve crveno na ekranu!
