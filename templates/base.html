@@ -15,7 +15,31 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>{% block title %}Fitness App{% endblock %}</title>
-
+<style>
+    /* Tanka plava traka na vrhu ekrana */
+    .htmx-indicator {
+        opacity: 0;
+        height: 4px;
+        width: 100%;
+        background-color: #00E5FF;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        transition: opacity 0.2s ease-in;
+    }
+    /* Kad HTMX pošalje zahtjev, traka se pojavi */
+    .htmx-request .htmx-indicator {
+        opacity: 1;
+        /* Mala animacija da izgleda kao da se puni */
+        animation: pulse 1s infinite; 
+    }
+    @keyframes pulse {
+        0% { width: 0%; }
+        50% { width: 50%; }
+        100% { width: 100%; }
+    }
+</style>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
@@ -37,6 +61,7 @@
     </script>
   </head>
   <body class="bg-[#121212] text-white font-sans antialiased" hx-boost="true">
+    <div class="htmx-indicator"></div>
     <main class="min-h-screen">{% block content %} {% endblock %}</main>
    <script>
     // POPRAVLJENO: Sada skripta gađa isključivo Django poruke, a NE sve crveno na ekranu!
