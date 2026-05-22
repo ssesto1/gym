@@ -1,61 +1,104 @@
 {% extends 'base.html' %}
 
-{% block title %}Registracija |  Fitness{% endblock %}
-
 {% block content %}
-<style>
-    .premium-form p { margin-bottom: 1.25rem; }
-    .premium-form label {
-        display: block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.1em; color: #9ca3af; margin-bottom: 0.5rem; margin-left: 0.25rem;
-    }
-    .premium-form input {
-        width: 100%; background-color: rgba(18, 18, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1rem; padding: 1rem; color: white; font-weight: 500; font-size: 1rem;
-        outline: none; transition: all 0.3s ease;
-    }
-    /* Fokus s pravom neonskom bojom aplikacije */
-    .premium-form input:focus { border-color: #00f2fe; box-shadow: 0 0 15px rgba(0, 242, 254, 0.15); }
-    .premium-form .errorlist { color: #f87171; font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem; list-style: none; padding: 0; }
-    
-    /* Agresivno i trajno skrivanje uputa za lozinku */
-    .premium-form .helptext { display: none !important; }
-    .premium-form ul:not(.errorlist) { display: none !important; }
-    .premium-form span.helptext { display: none !important; }
-</style>
-
-<div class="min-h-screen flex items-center justify-center px-5 py-12 relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-96 h-96 bg-[#00f2fe]/10 rounded-full blur-[120px] pointer-events-none"></div>
-
-    <div class="w-full max-w-md relative z-10">
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold text-white uppercase tracking-tight mb-2">Postani Član</h1>
-            <p class="text-gray-500 text-sm">Napravi račun i kreni s prvim treningom</p>
+<div class="min-h-screen bg-[#121212] flex items-center justify-center px-4 py-10">
+    <div class="max-w-md w-full bg-[#161616] rounded-3xl shadow-2xl p-8 border border-gray-800">
+        
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-[#1e1e1e] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#00E5FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white tracking-wide">POSTANI ČLAN</h2>
+            <p class="text-sm text-gray-500 mt-2">Unesi svoje podatke za Sesto Fitness profil</p>
         </div>
 
-        <div class="bg-brand-card/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-gray-800/50 shadow-2xl">
-            <form method="POST" class="premium-form">
-                {% csrf_token %}
-                
-                {% if form.non_field_errors %}
-                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 text-red-400 text-xs font-bold text-center">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+        <form method="POST" action="" class="space-y-5">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ime</label>
+                    <input type="text" name="first_name" 
+                           value="{{ form.first_name.value|default_if_none:'' }}" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Prezime</label>
+                    <input type="text" name="last_name" 
+                           value="{{ form.last_name.value|default_if_none:'' }}" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+            </div>
 
-                {{ form.as_p }}
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Username</label>
+                <input type="text" name="username" 
+                       value="{{ form.username.value|default_if_none:'' }}" 
+                       class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                       required>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Email</label>
+                <input type="email" name="email" 
+                       value="{{ form.email.value|default_if_none:'' }}" 
+                       class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                       required>
+            </div>
 
-                <button type="submit" class="w-full bg-[#00f2fe] hover:bg-[#00d4df] text-[#0a0a0a] font-black py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg transition-transform hover:-translate-y-0.5 mt-4">
-                    Registriraj se
-                </button>
-            </form>
-        </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Težina (kg)</label>
+                    <input type="number" step="0.1" name="tezina" 
+                           value="{{ form.tezina.value|default_if_none:'' }}" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Visina (cm)</label>
+                    <input type="number" name="visina" 
+                           value="{{ form.visina.value|default_if_none:'' }}" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+            </div>
 
-        <div class="text-center mt-8">
-            <p class="text-gray-500 text-sm">Već imaš račun? 
-                <a href="{% url 'users:prijava' %}" class="text-white font-bold hover:text-[#00f2fe] transition-colors ml-1 uppercase tracking-wider text-xs">Prijavi se</a>
-            </p>
-        </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Lozinka</label>
+                    <input type="password" name="password" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ponovi lozinku</label>
+                    <input type="password" name="password_confirm" 
+                           class="w-full bg-transparent text-white border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] focus:ring-1 focus:ring-[#00E5FF] transition-colors" 
+                           required>
+                </div>
+            </div>
+
+            {% if form.errors %}
+            <div class="bg-red-900/50 border border-red-500 text-red-200 text-sm p-3 rounded-lg mt-4">
+                Molimo ispravite greške u formi.
+            </div>
+            {% endif %}
+
+            <button type="submit" 
+                    class="w-full bg-[#00E5FF] text-black font-bold text-sm tracking-widest rounded-xl px-4 py-4 mt-6 hover:bg-cyan-400 transition-colors">
+                REGISTRIRAJ SE
+            </button>
+            
+            <div class="text-center mt-6">
+                <span class="text-sm text-gray-500">Već imaš račun?</span>
+                <a href="/korisnici/prijava/" class="text-sm text-white font-bold tracking-wider hover:text-[#00E5FF] ml-2">PRIJAVI SE</a>
+            </div>
+        </form>
+
     </div>
 </div>
 {% endblock %}
