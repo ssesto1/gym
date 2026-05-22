@@ -65,66 +65,70 @@
         </div>
     </div>
 
-    <form method="POST" class="space-y-6 mt-8">
-        {% csrf_token %}
-        
-        <div class="bg-brand-card/40 backdrop-blur-md p-6 rounded-[2rem] border border-gray-800/50 shadow-xl space-y-4">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-[#00f2fe] border-b border-gray-800/50 pb-3 mb-2">Osobni Podaci</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Ime</label>
-                    <input type="text" name="first_name" value="{{ u.first_name }}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white font-medium outline-none focus:border-[#00f2fe] transition-all">
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Prezime</label>
-                    <input type="text" name="last_name" value="{{ u.last_name }}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white font-medium outline-none focus:border-[#00f2fe] transition-all">
-                </div>
-            </div>
-            <div>
-                <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">E-mail Adresa</label>
-                <input type="email" name="email" value="{{ u.email }}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white font-medium outline-none focus:border-[#00f2fe] transition-all">
-            </div>
-        </div>
+    <form method="POST" enctype="multipart/form-data" class="space-y-5 mt-6">
+    {% csrf_token %}
 
-        <div class="bg-brand-card/40 backdrop-blur-md p-6 rounded-[2rem] border border-gray-800/50 shadow-xl space-y-4">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-[#00f2fe] border-b border-gray-800/50 pb-3 mb-2">Fitness Parametri</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Težina (kg)</label>
-                    <input type="number" name="tezina" value="{% if u.tezina %}{{ u.tezina|floatformat:0 }}{% endif %}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe] transition-all" placeholder="85">
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Visina (cm)</label>
-                    <input type="number" name="visina" value="{% if u.visina %}{{ u.visina }}{% endif %}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe] transition-all" placeholder="180">
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Godine</label>
-                    <input type="number" name="godine" value="{% if u.godine %}{{ u.godine }}{% endif %}" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe] transition-all" placeholder="25">
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Spol</label>
-                    <select name="spol" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-center font-bold outline-none focus:border-[#00f2fe] transition-all">
-                        <option value="M" {% if u.spol == 'M' %}selected{% endif %}>Muško</option>
-                        <option value="Z" {% if u.spol == 'Z' %}selected{% endif %}>Žensko</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-[10px] text-gray-500 uppercase tracking-wider mb-2">Primarni Cilj</label>
-                <select name="cilj" class="w-full bg-[#121212]/60 border border-gray-800 rounded-xl px-4 py-3 text-white font-bold outline-none focus:border-[#00f2fe] transition-all">
-                    <option value="maintain" {% if u.cilj == 'maintain' %}selected{% endif %}>Održavanje kilaže (TDEE)</option>
-                    <option value="loss" {% if u.cilj == 'loss' %}selected{% endif %}>Definicija / Mršavljenje (-500 kcal)</option>
-                    <option value="bulk" {% if u.cilj == 'bulk' %}selected{% endif %}>Suficit / Dobivanje mase (+500 kcal)</option>
-                </select>
-            </div>
-        </div>
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ime</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] transition-colors" required>
+    </div>
 
-        <div class="pt-2">
-            <button type="submit" class="w-full bg-[#00f2fe] hover:bg-[#00d4df] text-[#0a0a0a] font-black py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg transition-transform hover:-translate-y-0.5">
-                💾 Spremi promjene
-            </button>
-        </div>
-    </form>
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Prezime</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] transition-colors" required>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Spol</label>
+        <select name="spol" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] appearance-none">
+            <option value="M" {% if user.spol == 'M' %}selected{% endif %}>Muško</option>
+            <option value="Z" {% if user.spol == 'Z' %}selected{% endif %}>Žensko</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Godine</label>
+        <input type="number" name="godine" value="{{ user.godine|default_if_none:'' }}" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] transition-colors">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Težina (kg)</label>
+        <input type="number" step="0.1" name="tezina" value="{{ user.tezina|default_if_none:'' }}" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] transition-colors">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Visina (cm)</label>
+        <input type="number" name="visina" value="{{ user.visina|default_if_none:'' }}" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] transition-colors">
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Razina aktivnosti</label>
+        <select name="razina_aktivnosti" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] appearance-none">
+            <option value="sedentary" {% if user.razina_aktivnosti == 'sedentary' %}selected{% endif %}>Slabo aktivno</option>
+            <option value="light" {% if user.razina_aktivnosti == 'light' %}selected{% endif %}>Lagano aktivno</option>
+            <option value="moderate" {% if user.razina_aktivnosti == 'moderate' %}selected{% endif %}>Umjereno aktivno</option>
+            <option value="active" {% if user.razina_aktivnosti == 'active' %}selected{% endif %}>Vrlo aktivno</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Tvoj cilj</label>
+        <select name="cilj" class="w-full bg-[#1e1e1e] text-white border border-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00E5FF] appearance-none">
+            <option value="mršavljenje" {% if user.cilj == 'mršavljenje' %}selected{% endif %}>Mršavljenje</option>
+            <option value="održavanje" {% if user.cilj == 'održavanje' %}selected{% endif %}>Održavanje</option>
+            <option value="mišićna_masa" {% if user.cilj == 'mišićna_masa' %}selected{% endif %}>Mišićna masa</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Profilna slika</label>
+        <input type="file" name="profilna_slika" class="w-full text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-[#1e1e1e] file:text-[#00E5FF] hover:file:bg-[#252525]">
+    </div>
+
+    <button type="submit" class="w-full bg-[#00E5FF] text-black font-bold text-sm tracking-widest rounded-xl px-4 py-4 mt-8 mb-20 hover:bg-cyan-400 transition-colors uppercase shadow-lg shadow-cyan-500/20">
+        Spremi promjene
+    </button>
+</form>
 
     <div class="pt-6 border-t border-gray-800/50 text-center">
         <a href="{% url 'users:odjava' %}" class="inline-flex items-center justify-center w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold py-3.5 rounded-xl uppercase text-xs tracking-widest border border-red-500/20 transition-colors">
